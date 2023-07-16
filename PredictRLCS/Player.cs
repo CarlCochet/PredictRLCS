@@ -19,7 +19,7 @@ namespace PredictRLCS
             GamesPlayed = 0;
         }
 
-        public void UpdateRating(int change, int score, List<int> teamScores)
+        public void UpdateRating(double change, int score, List<int> teamScores)
         {
             var gamma = 6.0;
             var teamScore = (double)(teamScores.Sum());
@@ -33,7 +33,7 @@ namespace PredictRLCS
                             (Math.Pow(teamScores[2] / teamScore, gamma))
                         )
                     );
-                Rating += (int)((double)change * sa);
+                Rating += (int)(change * sa);
             }
             else
             {
@@ -43,7 +43,7 @@ namespace PredictRLCS
                             (Math.Pow(1.0 / (teamScores[2] / teamScore), gamma))
                         )
                     );
-                Rating += (int)(Math.Abs((double)change) * sa);
+                Rating += (int)(Math.Abs(change) * sa);
             }
 
             GamesPlayed++;

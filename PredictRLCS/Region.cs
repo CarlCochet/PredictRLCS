@@ -5,15 +5,15 @@ namespace PredictRLCS
 {
     internal class Region
     {
-        private string Name { get; set; }
+        public string Name { get; set; }
         private List<Team> Teams { get; set; }
-        private int Rating { get; set; }
+        public GlickoPlayer GlickoParams { get; set; }
 
         public Region(string name)
         {
             Name = name;
             Teams = new List<Team>();
-            Rating = 1500;
+            GlickoParams = new GlickoPlayer();
         }
 
         public int GetTeamIndex(List<Player> players)
@@ -23,18 +23,18 @@ namespace PredictRLCS
 
         public void FillTeam(string name, List<Player> players)
         {
-            if (GetTeamIndex(players) == -1)
+            if (GetTeamIndex(players) != -1) return;
+            var team = new Team(name)
             {
-                var team = new Team(name);
-                team.Players = players;
-                team.UpdateRating();
-                Teams.Add(team);
-            }
+                Players = players
+            };
+            team.UpdateRating();
+            Teams.Add(team);
         }
 
         public Team? GetTeam(List<Player> players)
         { 
-            return Teams.Find(t => players == t.Players);
+            return Teams.Find(t => players == t);
         }
 
         public Player? GetPlayer(string name)

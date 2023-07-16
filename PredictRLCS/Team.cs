@@ -6,7 +6,7 @@ namespace PredictRLCS
     {
         private string Name { get; set; }
         public List<Player> Players { get; set; }
-        private int Rating { get; set; }
+        public GlickoPlayer GlickoParams { get; set; }
         private int GamesPlayed { get; set; }
         private string Region { get; set; }
 
@@ -14,7 +14,7 @@ namespace PredictRLCS
         {
             Name = name;
             Players = new List<Player>();
-            Rating = 1500;
+            GlickoParams = new GlickoPlayer();
             GamesPlayed = 0;
             Region = "";
         }
@@ -26,8 +26,20 @@ namespace PredictRLCS
 
         public void UpdateRating()
         {
-            var totalRating = Players.Sum(p => p.Rating);
+            var totalRating = (double)Players.Sum(p => p.Rating);
+            GlickoParams = new GlickoPlayer(totalRating / Players.Count);
             GamesPlayed++;
+        }
+
+        public void UpdatePlayersRatings(double change, GameData.Team team)
+        {
+            foreach (var playerData in team.Players)
+            {
+                var player = FindPlayer(playerData.Info.Slug);
+                if (player == null) continue;
+                var playersScores = team.Players.Select(p => p.Stats.Core.Score).ToList();
+                player.UpdateRating(change, playerData.Stats.Core.Score, playersScores);
+            }
         }
 
         public static bool operator ==(List<Player>? players, Team? team)
@@ -45,22 +57,21 @@ namespace PredictRLCS
             return !(players == team);
         }
 
-        protected bool Equals(Team other)
+        private bool Equals(Team other)
         {
-            return Name == other.Name && Players.Equals(other.Players) && Rating == other.Rating && GamesPlayed == other.GamesPlayed && Region == other.Region;
+            return Name == other.Name && Players.Equals(other.Players) && GlickoParams == other.GlickoParams && GamesPlayed == other.GamesPlayed && Region == other.Region;
         }
 
         public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((Team)obj);
+            return obj.GetType() == this.GetType() && Equals((Team)obj);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, Players, Rating, GamesPlayed, Region);
+            return HashCode.Combine(Name, Players, GlickoParams, GamesPlayed, Region);
         }
     }
 }
