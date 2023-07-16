@@ -1,11 +1,5 @@
 import json
-
-from tqdm import tqdm
 from octanegg import Octane
-
-from player import Player
-from team import Team
-from region import Region
 
 
 def get_matches(client, tier: str, after: str, before: str) -> list:
