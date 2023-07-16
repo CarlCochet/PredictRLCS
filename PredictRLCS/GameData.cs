@@ -13,7 +13,7 @@ namespace PredictRLCS
         {
             [JsonPropertyName("_id")] public string Id { get; set; }
             [JsonPropertyName("slug")] public string Slug { get; set; }
-            [JsonPropertyName("octane_id")] public string OctaneId { get; set; }
+            [JsonPropertyName("octane_id")] public string? OctaneId { get; set; }
             [JsonPropertyName("event")] public Event Event { get; set; }
             [JsonPropertyName("stage")] public Stage Stage { get; set; }
             [JsonPropertyName("date")] public string Date { get; set; }
@@ -40,7 +40,7 @@ namespace PredictRLCS
         {
             [JsonPropertyName("_id")] public int Id { get; set; }
             [JsonPropertyName("name")] public string Name { get; set; }
-            [JsonPropertyName("format")] public string Format { get; set; }
+            [JsonPropertyName("format")] public string? Format { get; set; }
         }
 
         public struct Format
@@ -66,9 +66,9 @@ namespace PredictRLCS
         public struct TeamInfo
         {
             [JsonPropertyName("_id")] public string Id { get; set; }
-            [JsonPropertyName("slug")] public string Slug { get; set; }
+            [JsonPropertyName("slug")] public string? Slug { get; set; }
             [JsonPropertyName("name")] public string Name { get; set; }
-            [JsonPropertyName("image")] public string Image { get; set; }
+            [JsonPropertyName("image")] public string? Image { get; set; }
         }
 
         public struct Player
@@ -83,16 +83,16 @@ namespace PredictRLCS
             [JsonPropertyName("_id")] public string Id { get; set; }
             [JsonPropertyName("slug")] public string Slug { get; set; }
             [JsonPropertyName("tag")] public string Tag { get; set; }
-            [JsonPropertyName("country")] public string Country { get; set; }
+            [JsonPropertyName("country")] public string? Country { get; set; }
         }
 
         public struct Game
         {
-            [JsonPropertyName("_id")] public string Id { get; set; }
+            [JsonPropertyName("_id")] public string? Id { get; set; }
             [JsonPropertyName("blue")] public int Blue { get; set; }
             [JsonPropertyName("orange")] public int Orange { get; set; }
             [JsonPropertyName("duration")] public int Duration { get; set; }
-            [JsonPropertyName("ballchasing")] public string Ballchasing { get; set; }
+            [JsonPropertyName("ballchasing")] public string? Ballchasing { get; set; }
         }
 
         public struct Stats
