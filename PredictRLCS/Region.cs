@@ -21,12 +21,13 @@ namespace PredictRLCS
             return Teams.FindIndex(t => players == t.Players);
         }
 
-        public void FillTeam(string name, List<Player> players)
+        public void FillTeam(string name, List<Player> players, string region)
         {
             if (GetTeamIndex(players) != -1) return;
             var team = new Team(name)
             {
-                Players = players
+                Players = players,
+                Region = region
             };
             team.UpdateRating();
             Teams.Add(team);

@@ -6,17 +6,17 @@ namespace PredictRLCS
     {
         private List<GameData.Match> Matches { get; set; }
         private List<Region> Regions { get; set; }
+        private List<Player> Players { get; set; }
 
         public Simulator(List<GameData.Match> matches)
         {
             Matches = matches;
             Regions = new List<Region>();
+            Players = new List<Player>();
         }
 
         public void Simulate()
         {
-            var regions = new List<Region>();
-
             foreach (var match in Matches)
             {
                 var blueTeamData = match.Blue;
@@ -30,18 +30,30 @@ namespace PredictRLCS
                 var bluePlayers = FindPlayers(blueTeamData);
                 var orangePlayers = FindPlayers(orangeTeamData);
 
-                var region = GetRegion(match.Event.Region);
-                region.FillTeam(blueTeamData.Data.Info.Name, bluePlayers);
-                region.FillTeam(orangeTeamData.Data.Info.Name, orangePlayers);
+                Team? blueTeam;
+                Team? orangeTeam;
                 
-                var blueTeam = region.GetTeam(bluePlayers);
-                var orangeTeam = region.GetTeam(orangePlayers);
-                
+                if (match.Event.Region != "INT")
+                {
+                    var region = GetRegion(match.Event.Region);
+                    region.FillTeam(blueTeamData.Data.Info.Name, bluePlayers, region.Name);
+                    region.FillTeam(orangeTeamData.Data.Info.Name, orangePlayers, region.Name);
+                    blueTeam = region.GetTeam(bluePlayers);
+                    orangeTeam = region.GetTeam(orangePlayers);
+                }
+                else
+                {
+                    var blueRegion = FindRegion(blueTeamData.Data.Info.Region, bluePlayers);
+                    var orangeRegion = FindRegion(orangeTeamData.Data.Info.Region, orangePlayers);
+                    blueRegion.FillTeam(blueTeamData.Data.Info.Name, bluePlayers, blueRegion.Name);
+                    orangeRegion.FillTeam(orangeTeamData.Data.Info.Name, orangePlayers, orangeRegion.Name);
+                    blueTeam = blueRegion.GetTeam(bluePlayers);
+                    orangeTeam = orangeRegion.GetTeam(orangePlayers);
+                }
+
                 if (blueTeam == null || orangeTeam == null) continue;
                 SimulateMatch(blueTeam, orangeTeam, match);
             }
-
-            Regions = regions;
         }
 
         private void SimulateMatch(Team blueTeam, Team orangeTeam, GameData.Match match)
@@ -81,6 +93,25 @@ namespace PredictRLCS
             
         }
         
+        private Region FindRegion(string? regionName, List<Player> players)
+        {
+            if (regionName == null)
+            {
+                foreach (var r in Regions)
+                {
+                    var team = r.GetTeam(players);
+                    if (team != null) return r;
+                }
+                
+            }
+            
+            var region = Regions.Find(r => r.Name == regionName);
+            if (region != null) return region;
+            region = new Region(regionName);
+            Regions.Add(region);
+            return region;
+        }
+        
         private Region GetRegion(string name)
         {
             var region = Regions.Find(r => r.Name == name);
@@ -109,6 +140,7 @@ namespace PredictRLCS
                 {
                     var player = new Player(playerName);
                     players.Add(player);
+                    Players.Add(player);
                 }
             }
             

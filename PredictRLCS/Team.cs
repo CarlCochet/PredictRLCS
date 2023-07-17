@@ -8,7 +8,7 @@ namespace PredictRLCS
         public List<Player> Players { get; set; }
         public GlickoPlayer GlickoParams { get; set; }
         private int GamesPlayed { get; set; }
-        private string Region { get; set; }
+        public string Region { get; set; }
 
         public Team(string name)
         {

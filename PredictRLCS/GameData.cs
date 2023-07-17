@@ -67,6 +67,7 @@ namespace PredictRLCS
         {
             [JsonPropertyName("_id")] public string Id { get; set; }
             [JsonPropertyName("slug")] public string? Slug { get; set; }
+            [JsonPropertyName("region")] public string? Region { get; set; }
             [JsonPropertyName("name")] public string Name { get; set; }
             [JsonPropertyName("image")] public string? Image { get; set; }
         }
